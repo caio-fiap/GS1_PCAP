@@ -5,18 +5,108 @@ NOME_EQUIPE = "Equipe Netuno"
 # Ordem: [temperatura (ºC), comunicacao (%), bateria (%), oxigenio (%), estabilidade (%)]
 
 dados_missao = [
-[24, 92, 88, 96, 90],
-[27, 80, 72, 94, 85],
-[31, 65, 58, 91, 70],
-[36, 42, 38, 87, 55],
-[39, 28, 19, 78, 35],
-[34, 55, 32, 82, 50]
+    [24, 92, 88, 96, 90],
+    [27, 80, 72, 94, 85],
+    [31, 65, 58, 91, 70],
+    [36, 42, 38, 87, 55],
+    [39, 28, 19, 78, 35],
+    [34, 55, 32, 82, 50]
 ]
 
 areas_monitoradas = [
-"Temperatura interna",
-"Comunicação com a base",
-"Sistema de energia",
-"Suporte de oxigênio",
-"Estabilidade operacional"
+    "Temperatura interna",
+    "Comunicação com a base",
+    "Sistema de energia",
+    "Suporte de oxigênio",
+    "Estabilidade operacional"
 ]
+
+RECOMENDACOES = {
+    "temperatura": "Verificar controle térmico da missão",
+    "comunicacao": "Tentar restabelecer contato com a base",
+    "bateria": "Ativar modo de economia de energia",
+    "oxigenio": "Acionar protocolo de suporte a vida",
+    "estabilidade": "Redzir operacoes nao essenciais"
+}
+
+# funcoes de analise
+
+def analisar_temperatura(valor):
+    """Classifica a temperatura interna no modilo (ºC)."""
+    if valor > 35:
+        return "CRITICO", 2
+    elif valor > 30 or valor < 18:
+        return "ATENCAO", 1
+    else:
+        return "NORMAL", 0
+
+def analisar_comunicacao(valor):
+    """Classifica a qualidade do sinal de comunicacao (%)"""
+    if valor < 30:
+        return "CRITICO", 2
+    elif valor < 60:
+        return "ATENCAO", 1
+    else:
+        return "NORMAL", 0
+
+def analisar_bateria(valor):
+    """Classifica o nivel de bateria (%)"""
+    if valor < 20:
+        return "CRITICO", 2
+    elif valor < 50:
+        return "ATENCAO", 1
+    else:
+        return "NORMAL", 0
+
+def analisar_oxigenio(valor):
+    """Classifica o nivel de oxigenio (%)"""
+    if valor < 80:
+        return "CRITICO", 2
+    elif valor < 90:
+        return "ATENCAO", 1
+    else:
+        return "NORMAL", 0
+
+def analisar_estabilidade(valor):
+    """Classifica o estabilidade do sistema(%)"""
+    if valor < 40:
+        return "CRITICO", 2
+    elif valor < 70:
+        return "ATENCAO", 1
+    else:
+        return "NORMAL", 0
+
+def classificar_ciclo(pontuacao_total):
+    """Retorna o status do ciclo com base na pontuacao de risco"""
+    if pontuacao_total <= 2:
+        return "MISSAO ESTAVEL"
+    elif pontuacao_total <= 5:
+        return "MISSAO EM ATENCAO"
+    else:
+        return "MISSAO CRITICA"
+
+def analisar_tendencia(risco_primeiro, risco_ultimo):
+    """Compara o risco do primeiro e do ultimo ciclo para indicar tendencia"""
+    if risco_ultimo > risco_primeiro:
+        return "A missao apresentou tendencia de PIORA"
+    elif risco_primeiro > risco_ultimo:
+        return "A missao apresentou tendencia de MELHORA"
+    else:
+        return "A missao permaneceu ESTAVEL"
+
+def area_mais_afetada(alertas_ciclo):
+    """Recebe um dicionario e retorna lista de recomendacao"""
+    recomendacoes = []
+    mapa = {
+        "temperatura": "temperatura",
+        "comunicacao": "comunicacao",
+        "bateria": "bateria",
+        "oxigenio": "oxigenio",
+        "estabilidade": "estabilidade",
+    }
+    for chave, status in alertas_ciclo.items():
+        if status == "CRITICO":
+            recomendacoes.append(f" ^ {RECOMENDACOES[mapa[chave]]}")
+    return recomendacoes
+
+# funcao principal - relatorio final
