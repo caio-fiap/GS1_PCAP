@@ -179,3 +179,30 @@ def gerar_relatorio_final(dados, areas):
                 print(rec)
 
     #Resumo geral
+    print(f"\n{separador}")
+    print(" RESUMO GERAL DA MISSAO")
+    print(separador)
+
+    #tendencia
+    tendencia = analisar_tendencia(riscos_por_ciclo[0], riscos_por_ciclo[-1])
+    print(f" \n Tendencia da missao:")
+    print(f" {tendencia}")
+
+    #area mais afetada
+    area_critica, total_area = identificar_area_mais_afetada(pontuacao_por_area)
+    print(f"\n Area mais afetada: {area_critica} ({total_area} pontos acumulados)")
+
+    #pontos acumulados por area
+    print(f"\n Pontuacao acumulada por area:")
+    for i, r in enumerate(riscos_por_ciclo, start=1):
+        barra = "\u25A0" * r
+        print(f" Ciclo {i}: {r:>2}/10  {barra}")
+
+    print(f"\n {separador}")
+    print(" Relatorio concluido!")
+    print(separador)
+
+#execucao
+
+if __name__ == "__main__":
+    gerar_relatorio_final(dados_missao, areas_monitoradas)
