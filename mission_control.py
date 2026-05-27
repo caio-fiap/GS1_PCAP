@@ -15,9 +15,9 @@ dados_missao = [
 
 areas_monitoradas = [
     "Temperatura interna",
-    "Comunicação com a base",
+    "Comunicacao com a base",
     "Sistema de energia",
-    "Suporte de oxigênio",
+    "Suporte de oxigenio",
     "Estabilidade operacional"
 ]
 
@@ -94,7 +94,13 @@ def analisar_tendencia(risco_primeiro, risco_ultimo):
     else:
         return "A missao permaneceu ESTAVEL"
 
-def area_mais_afetada(alertas_ciclo):
+def identificar_area_mais_afetada(pontuacao_por_area):
+    """Retorna a área com maior risco."""
+    max_pontos = max(pontuacao_por_area)
+    indice = pontuacao_por_area.index(max_pontos)
+    return areas_monitoradas[indice], max_pontos
+
+def gerar_recomendacao(alertas_ciclo):
     """Recebe um dicionario e retorna lista de recomendacao"""
     recomendacoes = []
     mapa = {
@@ -110,3 +116,66 @@ def area_mais_afetada(alertas_ciclo):
     return recomendacoes
 
 # funcao principal - relatorio final
+def gerar_relatorio_final(dados, areas):
+    """Percorre todos os ciclos e exibe o relatorio final"""
+    separador = "=" * 62
+    linha = "-" * 62
+
+    print(separador)
+    print(f" MISSION CONTROL AI | {NOME_MISSAO}")
+    print(f" Equipe: {NOME_EQUIPE}")
+    print(separador)
+
+    riscos_por_ciclo = []
+    pontuacao_por_area = [0] * 5        # acumulador por coluna
+
+    for numero_ciclo, ciclo in enumerate(dados, start=1):
+        temperatura, comunicacao, bateria, oxigenio, estabilidade = ciclo
+
+        #analisar cada parametro
+        status_temp, pts_temp = analisar_temperatura(temperatura)
+        status_com, pts_com = analisar_comunicacao(comunicacao)
+        status_bat, pts_bat = analisar_bateria(bateria)
+        status_oxi, pts_oxi = analisar_oxigenio(oxigenio)
+        status_est, pts_est = analisar_estabilidade(estabilidade)
+
+        pontos_ciclo = pts_temp + pts_com + pts_bat + pts_oxi + pts_est
+        riscos_por_ciclo.append(pontos_ciclo)
+
+        #acumular pontos por area
+        pontuacao_por_area[0] += pts_temp
+        pontuacao_por_area[1] += pts_com
+        pontuacao_por_area[2] += pts_bat
+        pontuacao_por_area[3] += pts_oxi
+        pontuacao_por_area[4] += pts_est
+
+        classificacao = classificar_ciclo(pontos_ciclo)
+
+        #exibir cabecalho
+        print(f"\n CICLO {numero_ciclo}")
+        print(linha)
+        print(f" {'Parametro':<30} {'valor':>8} {'Status'}")
+        print(linha)
+        print(f" {'Temperatura interna':<30} {temperatura:>6}ºC {status_temp}")
+        print(f" {'Comunicacao com a base':<30} {comunicacao:>7}% {status_com}")
+        print(f" {'Sistema de energia':<30} {bateria:>7}% {status_bat}")
+        print(f" {'Suporte de oxigenio':<30} {oxigenio:>7}% {status_oxi}")
+        print(f" {'Estabilidade operacional':<30} {estabilidade:>7}% {status_est}")
+        print(linha)
+        print(f" Pontuacao de risco: {pontos_ciclo}/10   ->   {classificacao}")
+
+        #recomendacoes do ciclo
+        alertas = {
+            "temperatura": status_temp,
+            "comunicacao": status_com,
+            "bateria": status_bat,
+            "oxigenio": status_oxi,
+            "estabilidade": status_est,
+        }
+        recomendacoes = gerar_recomendacao(alertas)
+        if recomendacoes:
+            print(" Recomendacoes:")
+            for rec in recomendacoes:
+                print(rec)
+
+    #Resumo geral
