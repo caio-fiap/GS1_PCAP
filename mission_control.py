@@ -1,6 +1,12 @@
 NOME_MISSAO = "Projeto Aurora"
 NOME_EQUIPE = "Equipe Netuno"
 
+# cores no terminal
+VERMELHO = '\x1B[31m'
+VERDE = '\x1B[32m'
+AMARELO = '\x1B[33m'
+RESET = '\x1B[0m'
+
 # Matriz principal: linha = ciclo; coluna = parametro
 # Ordem: [temperatura (ºC), comunicacao (%), bateria (%), oxigenio (%), estabilidade (%)]
 
@@ -34,45 +40,45 @@ RECOMENDACOES = {
 def analisar_temperatura(valor):
     """Classifica a temperatura interna no modilo (ºC)."""
     if valor > 35:
-        return "CRITICO", 2
+        return f"{VERMELHO}CRITICO{RESET}", 2
     elif valor > 30 or valor < 18:
-        return "ATENCAO", 1
+        return f"{AMARELO}ATENCAO{RESET}", 1
     else:
         return "NORMAL", 0
 
 def analisar_comunicacao(valor):
     """Classifica a qualidade do sinal de comunicacao (%)"""
     if valor < 30:
-        return "CRITICO", 2
+        return f"{VERMELHO}CRITICO{RESET}", 2
     elif valor < 60:
-        return "ATENCAO", 1
+        return f"{AMARELO}ATENCAO{RESET}", 1
     else:
         return "NORMAL", 0
 
 def analisar_bateria(valor):
     """Classifica o nivel de bateria (%)"""
     if valor < 20:
-        return "CRITICO", 2
+        return f"{VERMELHO}CRITICO{RESET}", 2
     elif valor < 50:
-        return "ATENCAO", 1
+        return f"{AMARELO}ATENCAO{RESET}", 1
     else:
         return "NORMAL", 0
 
 def analisar_oxigenio(valor):
     """Classifica o nivel de oxigenio (%)"""
     if valor < 80:
-        return "CRITICO", 2
+        return f"{VERMELHO}CRITICO{RESET}", 2
     elif valor < 90:
-        return "ATENCAO", 1
+        return f"{AMARELO}ATENCAO{RESET}", 1
     else:
         return "NORMAL", 0
 
 def analisar_estabilidade(valor):
     """Classifica o estabilidade do sistema(%)"""
     if valor < 40:
-        return "CRITICO", 2
+        return f"{VERMELHO}CRITICO{RESET}", 2
     elif valor < 70:
-        return "ATENCAO", 1
+        return f"{AMARELO}ATENCAO{RESET}", 1
     else:
         return "NORMAL", 0
 
@@ -81,16 +87,16 @@ def classificar_ciclo(pontuacao_total):
     if pontuacao_total <= 2:
         return "MISSAO ESTAVEL"
     elif pontuacao_total <= 5:
-        return "MISSAO EM ATENCAO"
+        return f"{AMARELO}MISSAO EM ATENCAO{RESET}"
     else:
-        return "MISSAO CRITICA"
+        return f"{VERMELHO}MISSAO CRITICA{RESET}"
 
 def analisar_tendencia(risco_primeiro, risco_ultimo):
     """Compara o risco do primeiro e do ultimo ciclo para indicar tendencia"""
     if risco_ultimo > risco_primeiro:
-        return "A missao apresentou tendencia de PIORA"
+        return f"A missao apresentou tendencia de {VERMELHO}PIORA{RESET}"
     elif risco_primeiro > risco_ultimo:
-        return "A missao apresentou tendencia de MELHORA"
+        return f"A missao apresentou tendencia de {VERDE}MELHORA{RESET}"
     else:
         return "A missao permaneceu ESTAVEL"
 
@@ -198,7 +204,7 @@ def gerar_relatorio_final(dados, areas):
         barra = "\u25A0" * r
         print(f" Ciclo {i}: {r:>2}/10  {barra}")
 
-    print(f"\n {separador}")
+    print(f"\n{separador}")
     print(" Relatorio concluido!")
     print(separador)
 
