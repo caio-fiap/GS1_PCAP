@@ -94,7 +94,7 @@ def analisar_tendencia(risco_primeiro, risco_ultimo):
     else:
         return "A missao permaneceu ESTAVEL"
 
-def identificar_area_mais_afetada(pontuacao_por_area):
+def area_mais_afetada(pontuacao_por_area):
     """Retorna a área com maior risco."""
     max_pontos = max(pontuacao_por_area)
     indice = pontuacao_por_area.index(max_pontos)
@@ -189,7 +189,7 @@ def gerar_relatorio_final(dados, areas):
     print(f" {tendencia}")
 
     #area mais afetada
-    area_critica, total_area = identificar_area_mais_afetada(pontuacao_por_area)
+    area_critica, total_area = area_mais_afetada(pontuacao_por_area)
     print(f"\n Area mais afetada: {area_critica} ({total_area} pontos acumulados)")
 
     #pontos acumulados por area
